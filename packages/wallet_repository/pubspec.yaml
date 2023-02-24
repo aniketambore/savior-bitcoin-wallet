@@ -1,0 +1,21 @@
+name: wallet_repository
+publish_to: 'none'
+
+environment:
+  sdk: '>=2.19.0 <3.0.0'
+
+dependencies: 
+  equatable: ^2.0.5
+  bdk_api:
+    path: ../bdk_api
+  domain_models:
+    path: ../domain_models
+  key_value_storage:
+    path: ../key_value_storage
+  flutter_secure_storage: ^8.0.0
+  rxdart: ^0.27.7
+  meta: ^1.8.0
+
+dev_dependencies: 
+  lints: ^2.0.1
+  test: ^1.23.1

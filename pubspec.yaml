@@ -1,0 +1,51 @@
+name: savior_bitcoin_wallet
+description: A new Flutter project.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=2.19.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  bdk_api:
+    path: packages/bdk_api
+  component_library:
+    path: packages/component_library
+  key_value_storage:
+    path: packages/key_value_storage
+  wallet_repository:
+    path: packages/wallet_repository
+
+  create_wallet:
+    path: packages/features/create_wallet
+  home:
+    path: packages/features/home
+  receive:
+    path: packages/features/receive
+  recover_phrase:
+    path: packages/features/recover_phrase
+  recover_wallet:
+    path: packages/features/recover_wallet
+  send:
+    path: packages/features/send
+  success_indicator:
+    path: packages/features/success_indicator
+  tx_history:
+    path: packages/features/tx_history
+  routemaster: ^1.0.1
+  flutter_svg: ^2.0.2
+  
+  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
