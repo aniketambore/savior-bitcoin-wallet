@@ -10,6 +10,7 @@ import 'package:send/send.dart';
 import 'package:success_indicator/success_indicator.dart';
 import 'package:tx_history/tx_history.dart';
 import 'package:wallet_repository/wallet_repository.dart';
+import 'package:webview/webview.dart';
 
 Map<String, PageBuilder> buildRoutingTable({
   required RoutemasterDelegate routerDelegate,
@@ -110,6 +111,15 @@ Map<String, PageBuilder> buildRoutingTable({
         name: 'tx-history',
         child: TxHistoryScreen(
           walletRepository: walletRepository,
+          onTxSelected: (label, url, context) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => WebViewScreen(label: label, url: url),
+                fullscreenDialog: true,
+              ),
+            );
+          },
         ),
       );
     },
@@ -130,7 +140,7 @@ Map<String, PageBuilder> buildRoutingTable({
           },
         ),
       );
-    }
+    },
   };
 }
 

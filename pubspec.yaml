@@ -34,6 +34,8 @@ dependencies:
     path: packages/features/success_indicator
   tx_history:
     path: packages/features/tx_history
+  webview:
+    path: packages/features/webview
   routemaster: ^1.0.1
   flutter_svg: ^2.0.2
   

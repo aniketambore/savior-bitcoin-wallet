@@ -2,29 +2,29 @@
 
 As a developer, I am always looking for new challenges and opportunities to learn. Recently, I decided to implement some of the projects defined in Advanced Topics and Next Steps in Chapter 14 of Programming Bitcoin by Jimmy Song. Specifically, I wanted to build a Bitcoin Testnet wallet as a mobile app using Flutter and the BDK library.
 
-Before diving into coding, I wanted to make sure I had a strong understanding of the relevant standards and concepts. I reviewed BIP39, BIP32, BIP43, BIP44, and BIP84, and went through the complete documentation of BDK. I learned about Descriptors, which is a compact and semi-standard way to easily encode, or 'describe', how scripts (and subsequently, addresses) of a wallet should be generated. I also learned about PSBT (BIP:0174), which is how BDK signs the transaction and then broadcasts it while sending Bitcoins.
+Before diving into coding, I wanted to make sure I had a strong understanding of the relevant standards and concepts. I reviewed [BIP39](https://bips.xyz/39), [BIP32](https://bips.xyz/32), [BIP43](https://bips.xyz/43), [BIP44](https://bips.xyz/44), and [BIP84](https://bips.xyz/84), and went through the complete documentation of [BDK](https://bitcoindevkit.org/getting-started/). I learned about [Descriptors](https://bitcoindevkit.org/descriptors/), which is a compact and semi-standard way to easily encode, or 'describe', how scripts (and subsequently, addresses) of a wallet should be generated. I also learned about [PSBT (BIP:0174)](https://bips.xyz/174), which is how BDK signs the transaction and then broadcasts it while sending Bitcoins.
 
-Next, I had to decide on the right package to use for my project. I looked at 'bitcoin_flutter' but noticed some open issues on Github indicating that the package is no longer maintained. Instead, I decided to go with 'bdk_flutter', which utilizes the Rust BDK as its core library and uses Flutter Rust Bridge for binding.
+Next, I had to decide on the right package to use for my project. I looked at '[bitcoin_flutter](https://github.com/dart-bitcoin/bitcoin_flutter)' but noticed some open issues on Github indicating that the package is no longer maintained. Instead, I decided to go with '[bdk_flutter](https://github.com/LtbLightning/bdk-flutter)', which utilizes the Rust BDK as its core library and uses Flutter Rust Bridge for binding.
 
-To structure the project, I split the codebase into multiple local packages for the complete project, which helped enforce separation of concerns, promote cleaner APIs, and manage dependencies better. I used a mixed approach of feature-by-layer and feature-by-package, with each package having a src folder and barrel file.
+To structure the project, I split the codebase into multiple local [packages](https://github.com/aniketambore/savior-bitcoin-wallet/tree/main/packages) for the complete project, which helped enforce separation of concerns, promote cleaner APIs, and manage dependencies better. I used a mixed approach of feature-by-layer and feature-by-package, with each package having a src folder and barrel file.
 
-For data management, I followed the Repository pattern as there were two data sources (BDK and local cache) while getting the balance. I cached the wallet balance to improve user experience, allowing the app to respond faster. I had a different fetching policy while syncing the wallet and getting the balance.
+For data management, I followed the [Repository](https://github.com/aniketambore/savior-bitcoin-wallet/tree/main/packages/wallet_repository) pattern as there were two data sources (BDK and local cache) while getting the balance. I cached the wallet balance to improve user experience, allowing the app to respond faster. I had a different fetching policy while syncing the wallet and getting the balance.
 
-For state management, I followed the BLoC design pattern using the flutter_bloc package from the bloc library, and used Cubit for most of the classes, which is actually a simplified version of a Bloc.
+For state management, I followed the BLoC design pattern using the [flutter_bloc](https://pub.dev/packages/flutter_bloc) package from the bloc library, and used Cubit for most of the classes, which is actually a simplified version of a Bloc.
 
-To handle routing in the app, I followed Navigator 2 wrapper package Routemaster, which handled all integration between the feature packages inside main.
+To handle routing in the app, I followed Navigator 2 wrapper package [Routemaster](https://pub.dev/packages/routemaster), which handled all integration between the feature packages inside main.
 
-From the start, I also focused on developing a common widget catalog for the project. Reusing already-created widgets saved a lot of time and effort when creating and maintaining the project. So I had a component library package.
+From the start, I also focused on developing a common widget catalog for the project. Reusing already-created widgets saved a lot of time and effort when creating and maintaining the project. So I had a [component library package](https://github.com/aniketambore/savior-bitcoin-wallet/tree/main/packages/component_library).
 
-The app's architecture starts with the SplashScreen, which checks whether a wallet has already been created/loaded, and if not, launches the CreateWalletScreen. 
+The app's architecture starts with the [SplashScreen](https://github.com/aniketambore/savior-bitcoin-wallet/blob/main/lib/splash_screen.dart), which checks whether a wallet has already been created/loaded, and if not, launches the [CreateWalletScreen](https://github.com/aniketambore/savior-bitcoin-wallet/tree/main/packages/features/create_wallet). 
 
 The CreateWalletScreen displays two widgets: Create a New Wallet and Recover an Existing Wallet. 
 
-If a wallet already exists on the device, the HomeScreen is launched. 
+If a wallet already exists on the device, the [HomeScreen](https://github.com/aniketambore/savior-bitcoin-wallet/tree/main/packages/features/home) is launched. 
 
-This screen contains the home wallet screen with the Drawer (containing the AboutScreen and RecoveryPhraseScreen). 
+This screen contains the home wallet screen with the Drawer (containing the AboutScreen and [RecoveryPhraseScreen](https://github.com/aniketambore/savior-bitcoin-wallet/tree/main/packages/features/recover_phrase)). 
 
-The HomeScreen is simply a container for navigating between ReceiveAddressScreen, SendScreen, and TxHistoryScreen.
+The HomeScreen is simply a container for navigating between [ReceiveAddressScreen](https://github.com/aniketambore/savior-bitcoin-wallet/tree/main/packages/features/receive), [SendScreen](https://github.com/aniketambore/savior-bitcoin-wallet/tree/main/packages/features/send), and [TxHistoryScreen](https://github.com/aniketambore/savior-bitcoin-wallet/tree/main/packages/features/tx_history).
 
 I broke down the journey of building the wallet into 6 distinct steps:
 
@@ -43,9 +43,7 @@ The use of BIP39, BIP32, BIP43, BIP44 and BIP84 standards ensures that the walle
 
 The architecture of the app is well-organized and follows the principles of separation of concerns, promoting cleaner APIs, and better dependency management. The app uses a feature-by-package and feature-by-layer approach, with local packages that promote modularity, scalability, and maintainability. The use of the Repository pattern allows for easy integration of multiple data sources, while the BLoC design pattern and Cubit simplify state management.
 
-
 The app also uses a common widget catalog to promote code reusability, saving time and effort during development and maintenance. The use of Routemaster for navigation and integration between feature packages simplifies routing in the app, allowing for efficient navigation between screens.
-
 
 Overall, the app provides a powerful and developer-friendly platform for building Bitcoin Testnet wallets. With its modular architecture, well-organized codebase, and intuitive interface, developers can easily build, test, and deploy Bitcoin wallets for both Android and iOS platforms. The use of industry-standard protocols and libraries ensures compatibility with other wallets and promotes security and reliability.
 

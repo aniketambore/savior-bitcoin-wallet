@@ -6,13 +6,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tx_history/src/tx_history_cubit.dart';
 import 'package:wallet_repository/wallet_repository.dart';
 
+typedef TxSelected = Function(String label, String url, BuildContext context);
+
 class TxHistoryScreen extends StatelessWidget {
   const TxHistoryScreen({
     super.key,
     required this.walletRepository,
+    required this.onTxSelected,
   });
 
   final WalletRepository walletRepository;
+  final TxSelected onTxSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +24,19 @@ class TxHistoryScreen extends StatelessWidget {
       create: (_) => TxHistoryCubit(
         walletRepository: walletRepository,
       ),
-      child: const TxHistoryView(),
+      child: TxHistoryView(
+        onTxSelected: onTxSelected,
+      ),
     );
   }
 }
 
 class TxHistoryView extends StatelessWidget {
-  const TxHistoryView({super.key});
+  const TxHistoryView({
+    super.key,
+    required this.onTxSelected,
+  });
+  final TxSelected onTxSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +58,9 @@ class TxHistoryView extends StatelessWidget {
                   fontWeight: FontWeight.w800,
                 ),
               ),
-              const _TxListCardHolder(),
+              _TxListCardHolder(
+                onTxSelected: onTxSelected,
+              ),
               ExpandedOutlinedButton(
                 label: 'Back to wallet',
                 onTap: () {
@@ -64,7 +76,10 @@ class TxHistoryView extends StatelessWidget {
 }
 
 class _TxListCardHolder extends StatelessWidget {
-  const _TxListCardHolder();
+  const _TxListCardHolder({
+    required this.onTxSelected,
+  });
+  final TxSelected onTxSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +98,10 @@ class _TxListCardHolder extends StatelessWidget {
       builder: (context, state) {
         return Expanded(
           child: state is TxHistorySuccess
-              ? _TxListCard(txList: state.txList)
+              ? _TxListCard(
+                  txList: state.txList,
+                  onTxSelected: onTxSelected,
+                )
               : state is TxHistoryFailure
                   ? ExceptionIndicator(
                       onTryAgain: () {
@@ -101,9 +119,11 @@ class _TxListCardHolder extends StatelessWidget {
 class _TxListCard extends StatelessWidget {
   const _TxListCard({
     required this.txList,
+    required this.onTxSelected,
   });
 
   final TxList txList;
+  final TxSelected onTxSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +193,10 @@ class _TxListCard extends StatelessWidget {
                       'No confirmed transactions',
                       style: TextStyle(fontSize: FontSize.medium),
                     )
-                  : _TxList(txList: txList),
+                  : _TxList(
+                      txList: txList,
+                      onTxSelected: onTxSelected,
+                    ),
             ),
           ],
         ),
@@ -185,15 +208,20 @@ class _TxListCard extends StatelessWidget {
 class _TxList extends StatefulWidget {
   const _TxList({
     required this.txList,
+    required this.onTxSelected,
   });
 
   final TxList txList;
+  final TxSelected onTxSelected;
 
   @override
   State<_TxList> createState() => _TxListState();
 }
 
 class _TxListState extends State<_TxList> {
+  String getExplorerUrl(String txid) =>
+      'https://blockstream.info/testnet/tx/$txid';
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -201,7 +229,7 @@ class _TxListState extends State<_TxList> {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: widget.txList.txList.length,
-      itemBuilder: (context, index) {
+      itemBuilder: (_, index) {
         final tx = widget.txList.txList[index];
         final timestamp = tx.confirmationTime?.timestamp?.d12() ?? 0;
         final received = tx.received.toBTC();
@@ -210,14 +238,34 @@ class _TxListState extends State<_TxList> {
         final height = tx.confirmationTime?.height ?? 0;
         final txid = tx.txid;
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            text('Timestamp: $timestamp', height),
-            text('Received: $received BTC', height),
-            text('Sent: $sent BTC', height),
-            text('Fees: $fees SATS', height),
-            text('Height: $height', height),
-            text('Txid: $txid', height),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                text('Timestamp: $timestamp', height),
+                text('Received: $received BTC', height),
+                text('Sent: $sent BTC', height),
+                text('Fees: $fees SATS', height),
+                text('Height: $height', height),
+                text('Txid: $txid', height),
+              ],
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                icon: const Icon(
+                  Icons.open_in_new_outlined,
+                  size: 30,
+                ),
+                onPressed: () {
+                  widget.onTxSelected(
+                    'Blockstream Explorer',
+                    getExplorerUrl(txid),
+                    context,
+                  );
+                },
+              ),
+            ),
           ],
         );
       },
