@@ -13,3 +13,36 @@ extension BalanceCMtoDomain on BalanceCM {
     );
   }
 }
+
+extension TxListCMtoDomain on TxListCM {
+  TxList toDomainModel() {
+    return TxList(
+      txList: txList
+          .map(
+            (tx) => tx.toDomainModel(),
+          )
+          .toList(),
+    );
+  }
+}
+
+extension TxCMtoDomain on TxCM {
+  Tx toDomainModel() {
+    return Tx(
+      txid: txid,
+      received: received,
+      sent: sent,
+      fee: fee,
+      confirmationTime: confirmationTime?.toDomainModel(),
+    );
+  }
+}
+
+extension BlockTimeCMtoDomain on BlockTimeCM {
+  BlockTime toDomainModel() {
+    return BlockTime(
+      height: height,
+      timestamp: timestamp,
+    );
+  }
+}

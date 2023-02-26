@@ -13,3 +13,36 @@ extension BalanceRMtoCM on BalanceRM {
     );
   }
 }
+
+extension TxListRMtoCM on TxListRM {
+  TxListCM toCacheModel() {
+    return TxListCM(
+      txList: txList
+          .map(
+            (tx) => tx.toCacheModel(),
+          )
+          .toList(),
+    );
+  }
+}
+
+extension TxRMtoCM on TxRM {
+  TxCM toCacheModel() {
+    return TxCM(
+      txid: txid,
+      received: received,
+      sent: sent,
+      fee: fee,
+      confirmationTime: confirmationTime?.toCacheModel(),
+    );
+  }
+}
+
+extension BlockTimeRMtoCM on BlockTimeRM {
+  BlockTimeCM toCacheModel() {
+    return BlockTimeCM(
+      height: height,
+      timestamp: timestamp,
+    );
+  }
+}

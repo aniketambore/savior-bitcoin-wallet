@@ -143,6 +143,60 @@ class WalletRepository {
     }
   }
 
+  Stream<TxList> getTransaction({
+    required WalletSyncFetchPolicy fetchPolicy,
+  }) async* {
+    final isFetchPolicyNetworkOnly =
+        fetchPolicy == WalletSyncFetchPolicy.networkOnly;
+    if (isFetchPolicyNetworkOnly) {
+      final txList = await _getTransactionFromApi();
+      yield txList;
+    } else {
+      final cachedTxList = await _localStorage.getTxList();
+      final isFetchPolicyCacheAndNetwork =
+          fetchPolicy == WalletSyncFetchPolicy.cacheAndNetwork;
+
+      final isFetchPolicyCachePreferably =
+          fetchPolicy == WalletSyncFetchPolicy.cachePreferably;
+
+      final shouldEmitCachedTxListInAdvance =
+          isFetchPolicyCachePreferably || isFetchPolicyCacheAndNetwork;
+
+      if (shouldEmitCachedTxListInAdvance && cachedTxList != null) {
+        yield cachedTxList.toDomainModel();
+        if (isFetchPolicyCachePreferably) {
+          return;
+        }
+      }
+
+      try {
+        final freshTxList = await _getTransactionFromApi();
+        yield freshTxList;
+      } catch (_) {
+        final isFetchPolicyNetworkPreferably =
+            fetchPolicy == WalletSyncFetchPolicy.networkPreferably;
+        if (cachedTxList != null && isFetchPolicyNetworkPreferably) {
+          yield cachedTxList.toDomainModel();
+          return;
+        }
+        throw ListTxBdkException();
+      }
+    }
+  }
+
+  Future<TxList> _getTransactionFromApi() async {
+    try {
+      final apiTxList = await bdkApi.getTransactions();
+      await _localStorage.clearTxList();
+      final cacheTxList = apiTxList.toCacheModel();
+      await _localStorage.upsertTxList(cacheTxList);
+      final domainTxList = apiTxList.toDomainModel();
+      return domainTxList;
+    } on ListTxBdkException catch (_) {
+      throw ListTxBdkException();
+    }
+  }
+
   Future<void> sendTx({
     required String addressStr,
     required int amount,
@@ -159,16 +213,6 @@ class WalletRepository {
         throw SendTxException();
       }
       rethrow;
-    }
-  }
-
-  Future<TxList> getTransactions() async {
-    try {
-      final txListRM = await bdkApi.getTransactions();
-      final txList = txListRM.toDomainModel();
-      return txList;
-    } on ListTxBdkException catch (_) {
-      throw ListTxException();
     }
   }
 }

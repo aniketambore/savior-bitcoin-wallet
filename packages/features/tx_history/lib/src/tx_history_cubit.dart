@@ -11,21 +11,37 @@ class TxHistoryCubit extends Cubit<TxHistoryState> {
   }) : super(
           const TxHistoryInProgress(),
         ) {
-    _fetchTxList();
+    _fetchTxList(fetchPolicy: WalletSyncFetchPolicy.cacheAndNetwork);
   }
 
   final WalletRepository walletRepository;
 
-  Future<void> _fetchTxList() async {
+  Future<void> _fetchTxList({
+    required WalletSyncFetchPolicy fetchPolicy,
+  }) async {
+    final txListStream =
+        walletRepository.getTransaction(fetchPolicy: fetchPolicy);
     try {
-      final txList = await walletRepository.getTransactions();
-      emit(
-        TxHistorySuccess(txList: txList),
-      );
+      await for (final newTxList in txListStream) {
+        emit(
+          TxHistorySuccess(
+            txList: newTxList,
+            syncStatus: SyncStatus.success,
+          ),
+        );
+      }
     } catch (error) {
-      emit(
-        const TxHistoryFailure(),
-      );
+      final lastState = state;
+      if (lastState is TxHistorySuccess) {
+        emit(
+          TxHistorySuccess(
+            txList: lastState.txList,
+            syncStatus: SyncStatus.error,
+          ),
+        );
+      } else {
+        emit(const TxHistoryFailure());
+      }
     }
   }
 
@@ -34,6 +50,24 @@ class TxHistoryCubit extends Cubit<TxHistoryState> {
       const TxHistoryInProgress(),
     );
 
-    _fetchTxList();
+    _fetchTxList(
+      fetchPolicy: WalletSyncFetchPolicy.cacheAndNetwork,
+    );
+  }
+
+  Future<void> refresh() async {
+    final lastState = state;
+    if (lastState is TxHistorySuccess) {
+      emit(
+        TxHistorySuccess(
+          txList: lastState.txList,
+          syncStatus: SyncStatus.inProgress,
+        ),
+      );
+
+      _fetchTxList(
+        fetchPolicy: WalletSyncFetchPolicy.networkOnly,
+      );
+    }
   }
 }

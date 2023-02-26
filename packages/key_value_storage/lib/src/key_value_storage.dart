@@ -4,11 +4,17 @@ import 'package:key_value_storage/key_value_storage.dart';
 
 class KeyValueStorage {
   static const _balanceBoxKey = 'wallet-balance';
+  static const _txListBoxKey = 'tx-list';
+
   KeyValueStorage({
     @visibleForTesting HiveInterface? hive,
   }) : _hive = hive ?? Hive {
     try {
-      _hive.registerAdapter(BalanceCMAdapter());
+      _hive
+        ..registerAdapter(BalanceCMAdapter())
+        ..registerAdapter(TxListCMAdapter())
+        ..registerAdapter(TxCMAdapter())
+        ..registerAdapter(BlockTimeCMAdapter());
     } catch (_) {
       throw Exception(
           'You shouldn\'t have more than one [KeyValueStorage] instance in your '
@@ -19,6 +25,11 @@ class KeyValueStorage {
 
   Future<Box<BalanceCM>> get balanceBox => _openHiveBox<BalanceCM>(
         _balanceBoxKey,
+        isTemporary: true,
+      );
+
+  Future<Box<TxListCM>> get txListBox => _openHiveBox<TxListCM>(
+        _txListBoxKey,
         isTemporary: true,
       );
 

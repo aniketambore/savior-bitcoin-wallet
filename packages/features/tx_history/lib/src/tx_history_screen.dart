@@ -85,14 +85,16 @@ class _TxListCardHolder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<TxHistoryCubit, TxHistoryState>(
       listener: (context, state) {
-        final txListError =
-            state is TxHistorySuccess ? state.txListError : null;
-        if (txListError != null) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const GenericErrorSnackBar(),
-            );
+        if (state is TxHistorySuccess) {
+          final hasError = state.syncStatus == SyncStatus.error;
+
+          if (hasError) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                const GenericErrorSnackBar(),
+              );
+          }
         }
       },
       builder: (context, state) {

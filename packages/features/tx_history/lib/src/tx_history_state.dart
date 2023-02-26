@@ -17,16 +17,16 @@ class TxHistoryInProgress extends TxHistoryState {
 class TxHistorySuccess extends TxHistoryState {
   const TxHistorySuccess({
     required this.txList,
-    this.txListError,
+    this.syncStatus = SyncStatus.success,
   });
 
   final TxList txList;
-  final dynamic txListError;
+  final SyncStatus syncStatus;
 
   @override
   List<Object?> get props => [
         txList,
-        txListError,
+        syncStatus,
       ];
 }
 
@@ -35,4 +35,11 @@ class TxHistoryFailure extends TxHistoryState {
 
   @override
   List<Object?> get props => [];
+}
+
+enum SyncStatus {
+  idle,
+  inProgress,
+  success,
+  error,
 }
