@@ -5,15 +5,18 @@ import 'package:form_fields/form_fields.dart';
 import 'package:send/src/send_cubit.dart';
 import 'package:wallet_repository/wallet_repository.dart';
 
+typedef ScanAddress = Future<String?> Function();
+
 class SendScreen extends StatelessWidget {
-  const SendScreen({
-    super.key,
-    required this.onSendSuccess,
-    required this.walletRepository,
-  });
+  const SendScreen(
+      {super.key,
+      required this.onSendSuccess,
+      required this.walletRepository,
+      required this.onScanAddress});
 
   final VoidCallback onSendSuccess;
   final WalletRepository walletRepository;
+  final ScanAddress onScanAddress;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,7 @@ class SendScreen extends StatelessWidget {
       ),
       child: SendView(
         onSendSuccess: onSendSuccess,
+        onScanAddress: onScanAddress,
       ),
     );
   }
@@ -32,8 +36,10 @@ class SendView extends StatelessWidget {
   const SendView({
     super.key,
     required this.onSendSuccess,
+    required this.onScanAddress,
   });
   final VoidCallback onSendSuccess;
+  final ScanAddress onScanAddress;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +53,7 @@ class SendView extends StatelessWidget {
         child: SingleChildScrollView(
           child: _SendForm(
             onSendSuccess: onSendSuccess,
+            onScanAddress: onScanAddress,
           ),
         ),
       ),
@@ -57,8 +64,10 @@ class SendView extends StatelessWidget {
 class _SendForm extends StatefulWidget {
   const _SendForm({
     required this.onSendSuccess,
+    required this.onScanAddress,
   });
   final VoidCallback onSendSuccess;
+  final ScanAddress onScanAddress;
 
   @override
   State<_SendForm> createState() => __SendFormState();
@@ -68,6 +77,8 @@ class __SendFormState extends State<_SendForm> {
   final _addressFocusNode = FocusNode();
   final _amountFocusNode = FocusNode();
   final _feeFocusNode = FocusNode();
+
+  final _addressController = TextEditingController();
 
   @override
   void initState() {
@@ -97,6 +108,7 @@ class __SendFormState extends State<_SendForm> {
     _addressFocusNode.dispose();
     _amountFocusNode.dispose();
     _feeFocusNode.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -144,13 +156,14 @@ class __SendFormState extends State<_SendForm> {
               header(),
               Container(
                 padding: const EdgeInsets.symmetric(
-                  vertical: Spacing.mediumLarge,
+                  vertical: Spacing.large,
                   horizontal: Spacing.small,
                 ),
                 child: Wrap(
                   runSpacing: Spacing.medium,
                   children: [
                     WalletTextField(
+                      controller: _addressController,
                       hintText: 'Recipient',
                       iconPath: 'assets/icons/user.svg',
                       focusNode: _addressFocusNode,
@@ -198,13 +211,39 @@ class __SendFormState extends State<_SendForm> {
                 children: [
                   isSubmissionInProgress
                       ? ExpandedElevatedButton.inProgress(
-                          label: 'Broadcast Transaction')
-                      : ExpandedElevatedButton(
-                          label: 'Broadcast Transaction',
-                          onTap: () {
-                            cubit.onSubmit();
-                          },
-                          color: flamingo,
+                          label: 'Broadcasting Transaction',
+                        )
+                      : Row(
+                          children: [
+                            Expanded(
+                              child: ExpandedOutlinedButton(
+                                label: 'Scan',
+                                onTap: () async {
+                                  final address = await widget.onScanAddress();
+                                  setState(() {
+                                    _addressController.text = address ?? '';
+                                  });
+                                  cubit.onAddressChanged(
+                                      _addressController.text);
+                                },
+                                icon: const Icon(
+                                  Icons.qr_code,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: Spacing.medium,
+                            ),
+                            Expanded(
+                              child: ExpandedElevatedButton(
+                                label: 'Send',
+                                onTap: () {
+                                  cubit.onSubmit();
+                                },
+                                color: flamingo,
+                              ),
+                            ),
+                          ],
                         ),
                   const SizedBox(
                     height: Spacing.medium,
@@ -225,30 +264,27 @@ class __SendFormState extends State<_SendForm> {
   }
 
   Widget header() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: Spacing.mediumLarge),
-      child: Column(
-        children: const [
-          CircleWidget(
-            borderColor: woodSmoke,
-            shadowColor: trout,
-            bgColor: flamingo,
-            iconData: Icons.call_made_outlined,
-            size: 120,
+    return Column(
+      children: const [
+        CircleWidget(
+          borderColor: woodSmoke,
+          shadowColor: trout,
+          bgColor: flamingo,
+          iconData: Icons.call_made_outlined,
+          size: 120,
+        ),
+        SizedBox(
+          height: Spacing.medium,
+        ),
+        Text(
+          'Send Bitcoin',
+          style: TextStyle(
+            fontSize: 36,
+            fontWeight: FontWeight.w800,
+            color: black,
           ),
-          SizedBox(
-            height: Spacing.medium,
-          ),
-          Text(
-            'Send Bitcoin',
-            style: TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.w800,
-              color: black,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

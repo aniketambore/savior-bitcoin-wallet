@@ -41,6 +41,9 @@ class ExpandedOutlinedButton extends StatelessWidget {
                   color: black,
                   width: 2.0,
                 ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
               ),
               label: Text(
                 label,

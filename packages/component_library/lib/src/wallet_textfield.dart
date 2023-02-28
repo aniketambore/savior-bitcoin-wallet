@@ -17,6 +17,7 @@ class WalletTextField extends StatelessWidget {
     this.keyboardType,
     this.obscureText,
     this.onEditingComplete,
+    this.controller,
   });
 
   final String hintText;
@@ -31,6 +32,7 @@ class WalletTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool? obscureText;
   final Function()? onEditingComplete;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +107,7 @@ class WalletTextField extends StatelessWidget {
       textInputAction: textInputAction,
       autocorrect: autoCorrect ?? true,
       onEditingComplete: onEditingComplete,
+      controller: controller,
     );
   }
 }

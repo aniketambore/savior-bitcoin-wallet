@@ -1,6 +1,7 @@
 import 'package:create_wallet/create_wallet.dart';
 import 'package:flutter/material.dart';
 import 'package:home/home.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:receive/receive.dart';
 import 'package:recover_phrase/recover_phrase.dart';
 import 'package:recover_wallet/recover_wallet.dart';
@@ -103,6 +104,12 @@ Map<String, PageBuilder> buildRoutingTable({
             routerDelegate.replace(_PathConstants.successIndicatorPath);
           },
           walletRepository: walletRepository,
+          onScanAddress: () {
+            final navigation = routerDelegate.push<String?>(
+              _PathConstants.qrCodeScannerPath,
+            );
+            return navigation.result;
+          },
         ),
       );
     },
@@ -141,6 +148,12 @@ Map<String, PageBuilder> buildRoutingTable({
         ),
       );
     },
+    _PathConstants.qrCodeScannerPath: (_) {
+      return const MaterialPage(
+        name: 'qr-scanner',
+        child: QrCodeScannerScreen(),
+      );
+    }
   };
 }
 
@@ -156,7 +169,10 @@ class _PathConstants {
   static String get homePath => '/home';
 
   static String get receivePath => '$homePath/receive';
+
   static String get sendPath => '$homePath/send';
+  static String get qrCodeScannerPath => '$sendPath/qr-scanner';
+
   static String get txHistoryPath => '$homePath/txhistory';
   static String get recoveryPhrasePath => '$homePath/recovery-phrase';
   static String get successIndicatorPath => '$homePath/success';

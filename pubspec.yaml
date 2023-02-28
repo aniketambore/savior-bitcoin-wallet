@@ -36,6 +36,8 @@ dependencies:
     path: packages/features/tx_history
   webview:
     path: packages/features/webview
+  qr_code_scanner:
+    path: packages/features/qr_code_scanner
   routemaster: ^1.0.1
   flutter_svg: ^2.0.2
   
