@@ -71,4 +71,8 @@ class HomeCubit extends Cubit<HomeState> {
       );
     }
   }
+
+  Future<void> deleteWallet() async {
+    await _walletRepository.deleteWallet();
+  }
 }

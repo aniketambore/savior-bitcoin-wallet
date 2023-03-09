@@ -85,6 +85,10 @@ Map<String, PageBuilder> buildRoutingTable({
             routerDelegate.pop();
             routerDelegate.push(_PathConstants.recoveryPhrasePath);
           },
+          onWalletDeleted: () {
+            routerDelegate.pop();
+            routerDelegate.replace(_PathConstants.createWalletPath);
+          },
         ),
       );
     },

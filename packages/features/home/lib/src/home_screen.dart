@@ -15,6 +15,7 @@ class HomeScreen extends StatelessWidget {
     required this.onSendTap,
     required this.onTxHistoryTap,
     required this.onRecoverPhraseTap,
+    required this.onWalletDeleted,
     required this.walletRepository,
   });
 
@@ -22,6 +23,7 @@ class HomeScreen extends StatelessWidget {
   final VoidCallback onSendTap;
   final VoidCallback onTxHistoryTap;
   final VoidCallback onRecoverPhraseTap;
+  final VoidCallback onWalletDeleted;
   final WalletRepository walletRepository;
 
   @override
@@ -35,6 +37,7 @@ class HomeScreen extends StatelessWidget {
         onSendTap: onSendTap,
         onTxHistoryTap: onTxHistoryTap,
         onRecoverPhraseTap: onRecoverPhraseTap,
+        onWalletDeleted: onWalletDeleted,
       ),
     );
   }
@@ -47,12 +50,14 @@ class HomeView extends StatefulWidget {
     required this.onSendTap,
     required this.onTxHistoryTap,
     required this.onRecoverPhraseTap,
+    required this.onWalletDeleted,
   });
 
   final VoidCallback onReceiveTap;
   final VoidCallback onSendTap;
   final VoidCallback onTxHistoryTap;
   final VoidCallback onRecoverPhraseTap;
+  final VoidCallback onWalletDeleted;
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -68,6 +73,7 @@ class _HomeViewState extends State<HomeView> {
       ),
       drawer: HomeDrawer(
         onRecoverPhraseTap: widget.onRecoverPhraseTap,
+        onWalletDeleted: widget.onWalletDeleted,
       ),
       body: BlocConsumer<HomeCubit, HomeState>(
         listenWhen: (oldState, newState) =>

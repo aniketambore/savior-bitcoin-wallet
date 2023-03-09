@@ -215,6 +215,11 @@ class WalletRepository {
       rethrow;
     }
   }
+
+  Future<void> deleteWallet() async {
+    await _secureStorage.deleteWalletMnenomic();
+    await _localStorage.clear();
+  }
 }
 
 enum WalletSyncFetchPolicy {

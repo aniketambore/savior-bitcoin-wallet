@@ -2,8 +2,8 @@ import 'package:bdk_flutter/bdk_flutter.dart';
 import 'models/models.dart';
 
 class BDKApi {
-  late final Wallet _wallet;
-  late final Blockchain _blockchain;
+  late Wallet _wallet;
+  late Blockchain _blockchain;
 
   Future<List<Descriptor>> _getDescriptors({
     required String mnemonic,
