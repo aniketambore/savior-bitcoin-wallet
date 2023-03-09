@@ -5,9 +5,7 @@ class BDKApi {
   late Wallet _wallet;
   late Blockchain _blockchain;
 
-  Future<List<Descriptor>> _getDescriptors({
-    required String mnemonic,
-  }) async {
+  Future<List<Descriptor>> _getDescriptors(String mnemonic) async {
     print('[+] Running: [bdk_api.dart | _getDescriptor]');
     final descriptors = <Descriptor>[];
     for (var e in [KeychainKind.External, KeychainKind.Internal]) {
@@ -28,23 +26,18 @@ class BDKApi {
 
   Future<Blockchain> _blockchainInit() async {
     print('[+] Running: [bdk_api.dart | _blockchainInit]');
-    try {
-      final blockchain = await Blockchain.create(
-        config: BlockchainConfig.electrum(
-          config: ElectrumConfig(
-            stopGap: 10,
-            timeout: 5,
-            retry: 5,
-            url: "ssl://electrum.blockstream.info:60002",
-            validateDomain: false,
-          ),
+    final blockchain = await Blockchain.create(
+      config: BlockchainConfig.electrum(
+        config: ElectrumConfig(
+          stopGap: 10,
+          timeout: 5,
+          retry: 5,
+          url: "ssl://electrum.blockstream.info:60002",
+          validateDomain: false,
         ),
-      );
-      return blockchain;
-    } catch (e) {
-      print('[!] Error: [bdk_api.dart | _blockchainInit]: $e');
-      throw BlockchainBdkException();
-    }
+      ),
+    );
+    return blockchain;
   }
 
   Future<String> _generateMnemonic() async {
@@ -52,26 +45,29 @@ class BDKApi {
     return mnemonic.asString();
   }
 
+  Future<void> _initWallet(
+    List<Descriptor> descriptors,
+    Network network,
+  ) async {
+    _wallet = await Wallet.create(
+      descriptor: descriptors[0],
+      changeDescriptor: descriptors[1],
+      network: network,
+      databaseConfig: const DatabaseConfig.memory(),
+    );
+    print('[+] Success: [bdk_api.dart | _initWallet');
+  }
+
   Future<String> createWallet({
     Network? network,
     String? recoveryMnemonic,
   }) async {
     print('[+] Running: [bdk_api.dart | createWallet]');
-    late String mnemonic;
-    if (recoveryMnemonic != null) {
-      mnemonic = recoveryMnemonic;
-    } else {
-      mnemonic = await _generateMnemonic();
-    }
+    final mnemonic = recoveryMnemonic ?? await _generateMnemonic();
     try {
-      final descriptors = await _getDescriptors(mnemonic: mnemonic);
+      final descriptors = await _getDescriptors(mnemonic);
       _blockchain = await _blockchainInit();
-      _wallet = await Wallet.create(
-        descriptor: descriptors[0],
-        changeDescriptor: descriptors[1],
-        network: network ?? Network.Testnet,
-        databaseConfig: const DatabaseConfig.memory(),
-      );
+      await _initWallet(descriptors, network ?? Network.Testnet);
       print('[+] Success: [bdk_api.dart | createWallet');
       print('[+] Mnemonic: [bdk_api.dart | $mnemonic');
       return mnemonic;
@@ -84,14 +80,9 @@ class BDKApi {
   Future<void> recoverWallet(String mnemonic, Network network) async {
     print('[+] Running: [bdk_api.dart | recoverWallet]');
     try {
-      final descriptors = await _getDescriptors(mnemonic: mnemonic);
+      final descriptors = await _getDescriptors(mnemonic);
       _blockchain = await _blockchainInit();
-      _wallet = await Wallet.create(
-        descriptor: descriptors[0],
-        changeDescriptor: descriptors[1],
-        network: network,
-        databaseConfig: const DatabaseConfig.memory(),
-      );
+      await _initWallet(descriptors, network);
       print('[+] Success: [bdk_api.dart | recoverWallet]');
     } catch (e) {
       print('[!] Error: [bdk_api.dart | recoverWallet]: $e');
