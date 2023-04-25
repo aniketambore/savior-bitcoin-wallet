@@ -94,7 +94,7 @@ class BDKApi {
     print('[+] Running: [bdk_api.dart | getAddress]');
     try {
       final addressInfo =
-          await _wallet.getAddress(addressIndex: AddressIndex.New);
+          await _wallet.getAddress(addressIndex: const AddressIndex());
       print('[+] Address: ${addressInfo.address}');
       return addressInfo.address;
     } catch (e) {
@@ -133,12 +133,13 @@ class BDKApi {
       final txBuilder = TxBuilder();
       final address = await Address.create(address: addressStr);
       final script = await address.scriptPubKey();
-      final psbt = await txBuilder
+      final txBuilderResult = await txBuilder
           .addRecipient(script, amount)
           .feeRate(fee)
           .finish(_wallet);
-      final sbt = await _wallet.sign(psbt);
-      await _blockchain.broadcast(sbt);
+      final sbt = await _wallet.sign(txBuilderResult.psbt);
+      final tx = await sbt.extractTx();
+      await _blockchain.broadcast(tx);
     } catch (e) {
       print('[!] Error: [bdk_api.dart | sendTx]: ${e.runtimeType}');
       throw SendTxBdkException();

@@ -45,10 +45,10 @@ packages:
     dependency: "direct main"
     description:
       name: bdk_flutter
-      sha256: "983f0f69f72b0011c338b020b817eaa25a48edbc9e562cf57f133eec9ba639bd"
+      sha256: b7a3a22cfc688895f486aca86388d086c002616d42465416b700e79177b3f569
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.2"
+    version: "0.27.2"
   boolean_selector:
     dependency: transitive
     description:
