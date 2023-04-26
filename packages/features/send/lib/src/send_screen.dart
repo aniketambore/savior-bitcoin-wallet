@@ -79,6 +79,7 @@ class __SendFormState extends State<_SendForm> {
   final _feeFocusNode = FocusNode();
 
   final _addressController = TextEditingController();
+  final _feeRateController = TextEditingController();
 
   @override
   void initState() {
@@ -109,6 +110,7 @@ class __SendFormState extends State<_SendForm> {
     _amountFocusNode.dispose();
     _feeFocusNode.dispose();
     _addressController.dispose();
+    _feeRateController.dispose();
     super.dispose();
   }
 
@@ -126,8 +128,10 @@ class __SendFormState extends State<_SendForm> {
         final hasSubmissionError =
             state.submissionStatus == SubmissionStatus.genericError ||
                 state.submissionStatus == SubmissionStatus.sendTxError;
+        final hasEstimatingFeeError =
+            state.estimatingFeeStatus == EstimatingFeeStatus.genericError;
 
-        if (hasSubmissionError) {
+        if (hasSubmissionError || hasEstimatingFeeError) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -147,6 +151,8 @@ class __SendFormState extends State<_SendForm> {
         final feeError = state.fee.invalid ? state.fee.error : null;
         final isSubmissionInProgress =
             state.submissionStatus == SubmissionStatus.inProgress;
+        final estimatingFeeInProgress =
+            state.estimatingFeeStatus == EstimatingFeeStatus.inProgress;
 
         final cubit = context.read<SendCubit>();
         return Container(
@@ -192,6 +198,7 @@ class __SendFormState extends State<_SendForm> {
                           : 'This amount is not valid.',
                     ),
                     WalletTextField(
+                      controller: _feeRateController,
                       hintText: 'Fee rate',
                       iconPath: 'assets/icons/mining.svg',
                       keyboardType: TextInputType.number,
@@ -203,6 +210,18 @@ class __SendFormState extends State<_SendForm> {
                       errorText: feeError == null
                           ? null
                           : 'This fee rate is not valid',
+                      suffix: estimatingFeeInProgress
+                          ? const CenteredCircularProgressIndicator()
+                          : IconButton(
+                              onPressed: () async {
+                                final feeRate = await cubit.estimateFeeRate();
+                                setState(() {
+                                  _feeRateController.text = feeRate.toString();
+                                });
+                                cubit.onFeeChanged(feeRate);
+                              },
+                              icon: const Icon(Icons.refresh),
+                            ),
                     ),
                   ],
                 ),

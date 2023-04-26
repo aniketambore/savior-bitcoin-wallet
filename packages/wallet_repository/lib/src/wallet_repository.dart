@@ -216,6 +216,11 @@ class WalletRepository {
     }
   }
 
+  Future<double> estimateFeeRate() async {
+    final feeRate = await bdkApi.estimateFeeRate();
+    return feeRate;
+  }
+
   Future<void> deleteWallet() async {
     await _secureStorage.deleteWalletMnenomic();
     await _localStorage.clear();

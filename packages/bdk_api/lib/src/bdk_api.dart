@@ -159,4 +159,9 @@ class BDKApi {
       throw ListTxBdkException();
     }
   }
+
+  Future<double> estimateFeeRate() async {
+    final feeRate = await _blockchain.estimateFee(6);
+    return feeRate.asSatPerVb();
+  }
 }

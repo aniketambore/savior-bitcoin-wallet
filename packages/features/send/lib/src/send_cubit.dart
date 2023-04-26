@@ -90,6 +90,27 @@ class SendCubit extends Cubit<SendState> {
     emit(newState);
   }
 
+  Future<double> estimateFeeRate() async {
+    final newState = state.copyWith(
+      estimatingFeeStatus: EstimatingFeeStatus.inProgress,
+    );
+    emit(newState);
+    try {
+      final feeRate = await walletRepository.estimateFeeRate();
+      final newState = state.copyWith(
+        estimatingFeeStatus: EstimatingFeeStatus.idle,
+      );
+      emit(newState);
+      return feeRate;
+    } on Exception {
+      final newState = state.copyWith(
+        estimatingFeeStatus: EstimatingFeeStatus.genericError,
+      );
+      emit(newState);
+      rethrow;
+    }
+  }
+
   void onSubmit() async {
     final address = Address.validated(
       state.address.value,

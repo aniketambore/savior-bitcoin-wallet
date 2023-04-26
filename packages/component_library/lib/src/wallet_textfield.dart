@@ -18,6 +18,7 @@ class WalletTextField extends StatelessWidget {
     this.obscureText,
     this.onEditingComplete,
     this.controller,
+    this.suffix,
   });
 
   final String hintText;
@@ -33,6 +34,7 @@ class WalletTextField extends StatelessWidget {
   final bool? obscureText;
   final Function()? onEditingComplete;
   final TextEditingController? controller;
+  final Widget? suffix;
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +102,7 @@ class WalletTextField extends StatelessWidget {
               )
             : null,
         errorText: errorText,
+        suffixIcon: suffix,
       ),
       enabled: enabled,
       focusNode: focusNode,
