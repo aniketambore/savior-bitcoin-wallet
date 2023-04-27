@@ -13,3 +13,4 @@ export 'src/expanded_outlined_button.dart';
 export 'src/generic_error_snack_bar.dart';
 export 'src/qr_card.dart';
 export 'src/wallet_textfield.dart';
+export 'src/balance_formatter.dart';

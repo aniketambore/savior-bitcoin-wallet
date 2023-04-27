@@ -1,5 +1,4 @@
 import 'package:component_library/component_library.dart';
-import 'package:converter/converter.dart';
 import 'package:domain_models/domain_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -147,41 +146,33 @@ class _HomeWalletContentState extends State<_HomeWalletContent> {
             margin: const EdgeInsets.symmetric(vertical: Spacing.xLarge),
             color: athens,
             child: SizedBox(
-              height: 100,
-              child: Stack(
+              height: 110,
+              child: Column(
                 children: [
-                  Positioned(
-                    right: 10,
-                    child: IconButton(
-                        onPressed: () {
-                          setState(
-                            () {
-                              toBtc = !toBtc;
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.autorenew_outlined)),
+                  Container(
+                    alignment: Alignment.topCenter,
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.all(Spacing.mediumLarge),
+                    child: const Text(
+                      'TOTAL BALANCE:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: FontSize.medium,
+                        color: woodSmoke,
+                      ),
+                    ),
                   ),
                   Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
-                          toBtc
-                              ? 'assets/icons/bitcoin.svg'
-                              : 'assets/icons/satoshi.svg',
+                          'assets/icons/bitcoin_logo.svg',
                           height: 46,
                           width: 46,
                         ),
-                        Text(
-                          toBtc
-                              ? widget.balance.total.toBTC()
-                              : widget.balance.total.toString(),
-                          style: const TextStyle(
-                            fontSize: FontSize.large,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
+                        const SizedBox(width: 5),
+                        BalanceFormatter(balance: widget.balance.total),
                       ],
                     ),
                   ),
