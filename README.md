@@ -3,44 +3,43 @@
     <h1> Savior Bitcoin Testnet Wallet</h1>
 </div>
 
-<h3 align="center"> I'm excited to introduce you to Savior Bitcoin Wallet, which showcases the power of the Flutter framework and <a href="https://pub.dev/packages/bdk_flutter">BDK Flutter</a> in developing a secure and easy-to-use Bitcoin wallet. </h3>
+<h3 align="center"> Savior Bitcoin Wallet is a non-custodial hierarchical deterministic Bitcoin wallet developed using Flutter and BDK. It is a secure and easy-to-use wallet that supports creating new wallets, recovering an existing wallet, sending Bitcoin, receiving Bitcoin, displaying transaction history, and using Blockstream Explorer in the in-app web view. </h3>
 
-## Screens Specification
+## Features
+- Create New Wallet
+- Recover Existing Wallet
+- Send Bitcoin: Send Bitcoin to other Bitcoin addresses with a dynamic fee estimation feature to ensure that your transactions confirm as quickly as possible.
+- Receive Bitcoin: Generate a new receiving address to receive Bitcoin from other people or services.
+- Transaction History: Display a transaction history that shows all of your incoming and outgoing Bitcoin transactions.
+- Blockstream Explorer: Explore the Bitcoin blockchain using Blockstream's open-source explorer in the in-app web view.
 
-Splash Screen                             |   CreateWallet Screen
-:----------------------------------------:|:-------------------------:
-![](readme_content/ss1.jpg)  |  ![](readme_content/ss2.jpg)
+## Screen Specifications
 
+![Savior Bitcoin Wallet Screen Specification 1](readme_content/ss1.png)
 
-Home Screen                         |   ReceiveAddress Screen
-:--------------------------------:|:-------------------------:
-![](readme_content/ss3.jpg)  |  ![](readme_content/ss4.jpg)
+![Savior Bitcoin Wallet Screen Specification 2](readme_content/ss2.png)
 
-Send Screen                         |   Recovery Phrase Screen
-:--------------------------------:|:-------------------------:
-![](readme_content/ss5.jpg)  |  ![](readme_content/ss6.jpg)
+![Savior Bitcoin Wallet Screen Specification 3](readme_content/ss3.png)
 
-Home Screen                         |   TxHistory Screen
-:--------------------------------:|:-------------------------:
-![](readme_content/ss7.jpg)  |  ![](readme_content/ss8.jpg)
-
-Home Screen                         |   Success Indicator Screen
-:--------------------------------:|:-------------------------:
-![](readme_content/ss9.jpg)  |  ![](readme_content/ss10.jpg)
+## Architecture
+The project is developed with the repository pattern and BLoC design for efficient state management. It is also made utilizing multiple local packages for modularity and scalability.
 
 ## Building
 
-1. Clone the repo
-2. Run `cd savior_bitcoin_wallet`
-3. Run `make get`
-4. Start Debugging
+1. Clone the repo.
+2. Navigate to the root directory of the project: `cd savior_bitcoin_wallet`.
+3. Install the project dependencies: `make get`.
+4. Start debugging.
 
-## Contributing:
-
- - Fork it!
- - Create your feature branch: `git checkout -b my-new-feature`
- - Commit your changes: `git commit -am 'Add some feature'`
- - Push to the branch: `git push origin my-new-feature`
+## Contributing
+We welcome and appreciate contributions to the project. If you'd like to contribute, please follow these steps:
+ - Fork the repo.
+ - Create your feature branch: `git checkout -b my-new-feature`.
+ - Commit your changes: `git commit -am 'Add some feature'`.
+ - Push to the branch: `git push origin my-new-feature`.
  - Submit a pull request.
 
- <h3 align="center">Show some ❤ and star the repo to support the project</h3>
+## Acknowledgements
+The project was developed with the support of [Bitcoin Development Kit - Flutter Package](https://github.com/LtbLightning/bdk-flutter).
+
+ <h3 align="center">Please show some love and star the repo to support the project. Thank you!</h3>
