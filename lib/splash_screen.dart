@@ -20,6 +20,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  WalletRepository get walletRepository => widget.walletRepository;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -29,13 +31,14 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _walletCheck() async {
-    final walletMnemonic = await widget.walletRepository.getWalletMnemonic();
+    final walletMnemonic = await walletRepository.getWalletMnemonic();
     if (walletMnemonic != null) {
       try {
-        await widget.walletRepository.recoverWallet(walletMnemonic);
+        await walletRepository.recoverWallet(walletMnemonic);
         widget.pushToHome();
       } catch (e) {
         print('Error: [splash_screen.dart | _walletCheck]: $e');
+        widget.pushToHome();
       }
     } else {
       widget.pushToCreateWallet();
@@ -44,11 +47,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Image(
               height: 180,
               image: AssetImage('assets/images/logo.png'),

@@ -28,9 +28,10 @@ class CreateWalletCubit extends Cubit<CreateWalletState> {
       emit(newState);
     } catch (error) {
       final newState = state.copyWith(
-        submissionStatus: error is! CreateWalletException
-            ? SubmissionStatus.error
-            : SubmissionStatus.idle,
+        submissionStatus:
+            (error is CreateWalletException) || (error is BlockchainException)
+                ? SubmissionStatus.error
+                : SubmissionStatus.idle,
       );
 
       emit(newState);
