@@ -26,6 +26,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace "com.anipy.savior_bitcoin_wallet"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 

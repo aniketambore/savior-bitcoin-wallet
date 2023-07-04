@@ -2,7 +2,7 @@ name: bdk_api
 publish_to: 'none'
 
 environment:
-  sdk: '>=2.19.0 <3.0.0'
+  sdk: '>=3.0.5 <4.0.0'
 
 dependencies:
   bdk_flutter: ^0.28.2

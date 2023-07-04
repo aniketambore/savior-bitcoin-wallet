@@ -79,8 +79,8 @@ class BDKApi {
     String? recoveryMnemonic,
   }) async {
     print('[BDK API] Creating wallet...');
-    final mnemonic = recoveryMnemonic ?? await _generateMnemonic();
     try {
+      final mnemonic = recoveryMnemonic ?? await _generateMnemonic();
       await _initializeBlockchainAndWallet(
         mnemonic,
         network ?? Network.Testnet,

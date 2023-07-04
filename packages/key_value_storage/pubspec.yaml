@@ -2,7 +2,7 @@ name: key_value_storage
 publish_to: 'none'
 
 environment:
-  sdk: '>=2.19.0 <3.0.0'
+  sdk: '>=3.0.5 <4.0.0'
 
 dependencies: 
   hive: ^2.2.3

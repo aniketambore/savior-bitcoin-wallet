@@ -2,7 +2,7 @@ name: component_library
 publish_to: 'none'
 
 environment:
-  sdk: '>=2.19.0 <3.0.0'
+  sdk: '>=3.0.5 <4.0.0'
 
 dependencies:
   flutter:
