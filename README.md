@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="assets/images/logo.png?raw=true" width="80px" alt="Savior Bitcoin Wallet Logo"/>
+    <img src="https://i.ibb.co/0KJMMDm/logo.png" width="80px" alt="Savior Bitcoin Wallet Logo"/>
     <h1> Savior Bitcoin Testnet Wallet</h1>
 </div>
 
@@ -15,11 +15,11 @@
 
 ## Screen Specifications
 
-![Savior Bitcoin Wallet Screen Specification 1](readme_content/ss1.png)
+![Savior Bitcoin Wallet Screen Specification 1](https://i.ibb.co/hfMrrHM/ss1.png)
 
-![Savior Bitcoin Wallet Screen Specification 2](readme_content/ss2.png)
+![Savior Bitcoin Wallet Screen Specification 2](https://i.ibb.co/SP8DSGR/ss2.png)
 
-![Savior Bitcoin Wallet Screen Specification 3](readme_content/ss3.png)
+![Savior Bitcoin Wallet Screen Specification 3](https://i.ibb.co/DKj9tn7/ss3.png)
 
 ## Architecture
 The project is developed with the repository pattern and BLoC design for efficient state management. It is also made utilizing multiple local packages for modularity and scalability.
