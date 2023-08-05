@@ -49,8 +49,8 @@ class DrawerHeader extends StatelessWidget {
           top: 24 + MediaQuery.of(context).padding.top,
           bottom: 24,
         ),
-        child: Column(
-          children: const [
+        child: const Column(
+          children: [
             CircleAvatar(
               radius: 52,
               backgroundImage: AssetImage('assets/images/logo.png'),
@@ -67,7 +67,7 @@ class DrawerHeader extends StatelessWidget {
               ),
             ),
             Text(
-              'Version: 0.0.0',
+              'Version: 0.1.0',
               style: TextStyle(
                 color: white,
                 fontSize: 17,
